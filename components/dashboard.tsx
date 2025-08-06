@@ -5,13 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { TrendingUp, TrendingDown, DollarSign, Target, BarChart3, Plus, Filter, Search, Moon, Sun, Settings } from 'lucide-react'
+import { TrendingUp, TrendingDown, DollarSign, Target, BarChart3, Plus, Filter, Search, Moon, Sun, Settings, Globe } from 'lucide-react'
 import { TradeForm } from "./trade-form"
 import { TradeHistory } from "./trade-history"
 import { PerformanceChart } from "./performance-chart"
 import { CalendarView } from "./calendar-view"
 import { PnLCalendar } from "./pnl-calendar"
 import { SettingsPage } from "./settings-page"
+import { EconomicCalendar } from "./economic-calendar"
 import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
 import { useRouter } from 'next/navigation'
@@ -163,11 +164,15 @@ export function Dashboard() {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-slate-800/50 border border-slate-700/50">
+          <TabsList className="grid w-full grid-cols-5 bg-slate-800/50 border border-slate-700/50">
             <TabsTrigger value="dashboard" className="data-[state=active]:bg-slate-700">Dashboard</TabsTrigger>
             <TabsTrigger value="trades" className="data-[state=active]:bg-slate-700">Trades</TabsTrigger>
             <TabsTrigger value="analytics" className="data-[state=active]:bg-slate-700">Analytics</TabsTrigger>
             <TabsTrigger value="calendar" className="data-[state=active]:bg-slate-700">Calendar</TabsTrigger>
+            <TabsTrigger value="economic" className="data-[state=active]:bg-slate-700">
+              <Globe className="h-4 w-4 mr-2" />
+              Economic
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
@@ -376,6 +381,10 @@ export function Dashboard() {
           <TabsContent value="calendar" className="space-y-6">
             <h2 className="text-2xl font-bold text-white">Trading Calendar</h2>
             <CalendarView />
+          </TabsContent>
+
+          <TabsContent value="economic" className="space-y-6">
+            <EconomicCalendar />
           </TabsContent>
         </Tabs>
       </div>
