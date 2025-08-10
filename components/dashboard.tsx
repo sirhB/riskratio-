@@ -30,6 +30,16 @@ import { OnboardingTour } from "./onboarding-tour"
 import { ToastNotifications, useToast } from "./toast-notifications"
 import { KeyboardShortcuts } from "./keyboard-shortcuts"
 import { PWARegistration } from "./pwa-registration"
+import { 
+  ModernCard, 
+  ModernButton, 
+  ModernBadge, 
+  GradientText, 
+  GlassContainer,
+  AnimatedIcon,
+  FloatingActionButton,
+  PulseEffect
+} from "./modern-design-system"
 import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
 import { useRouter } from 'next/navigation'
@@ -231,73 +241,84 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
       {/* Header */}
-      <header className="border-b border-slate-700/50 bg-slate-900/80 backdrop-blur-xl">
+      <header className="border-b border-border/50 bg-card/30 backdrop-blur-xl supports-[backdrop-filter]:bg-card/20 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
-                  <BarChart3 className="h-6 w-6 text-white" />
-                </div>
+                <PulseEffect>
+                  <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg">
+                    <AnimatedIcon animation="float">
+                      <BarChart3 className="h-6 w-6 text-primary-foreground" />
+                    </AnimatedIcon>
+                  </div>
+                </PulseEffect>
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                  <GradientText className="text-3xl font-bold">
                     RiskRat.io
-                  </h1>
-                  <p className="text-xs text-slate-400">Futures & Forex Analytics</p>
+                  </GradientText>
+                  <p className="text-xs text-muted-foreground">Futures & Forex Analytics</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <GlobalSearch onNavigate={handleNavigate} />
               <div className="text-right hidden sm:block">
-                <div className="text-sm text-white">{user.full_name || user.fullName}</div>
-                <div className="text-xs text-slate-400">{user.email}</div>
+                <div className="text-sm font-medium text-foreground">{user.full_name || user.fullName}</div>
+                <div className="text-xs text-muted-foreground">{user.email}</div>
               </div>
-              <Button
+              <ModernButton
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowOnboarding(true)}
-                className="text-slate-400 hover:text-white"
                 title="Help & Tour"
               >
-                <HelpCircle className="h-4 w-4" />
-              </Button>
-              <Button
+                <AnimatedIcon animation="pulse" className="mr-2">
+                  <HelpCircle className="h-4 w-4" />
+                </AnimatedIcon>
+                Help & Tour
+              </ModernButton>
+              <ModernButton
                 variant="ghost"
                 size="sm"
                 onClick={() => setActiveTab("settings")}
-                className="text-slate-400 hover:text-white"
               >
-                <Settings className="h-4 w-4" />
-              </Button>
-              <Button
+                <AnimatedIcon animation="float" className="mr-2">
+                  <Settings className="h-4 w-4" />
+                </AnimatedIcon>
+                Settings
+              </ModernButton>
+              <ModernButton
                 variant="ghost"
                 size="sm"
                 onClick={() => {
                   localStorage.removeItem('user')
                   router.push('/')
                 }}
-                className="text-slate-400 hover:text-white"
               >
                 Sign Out
-              </Button>
-              <Button
+              </ModernButton>
+              <ModernButton
                 variant="ghost"
                 size="sm"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-slate-400 hover:text-white"
               >
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
-              <Button 
+                <AnimatedIcon animation="float" className="mr-2">
+                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </AnimatedIcon>
+              </ModernButton>
+              <ModernButton 
+                variant="gradient"
                 onClick={() => setShowTradeForm(true)} 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
+                className="shadow-lg hover:shadow-xl"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <AnimatedIcon animation="bounce" className="mr-2">
+                  <Plus className="h-4 w-4" />
+                </AnimatedIcon>
                 Add Trade
-              </Button>
+              </ModernButton>
             </div>
           </div>
         </div>
@@ -322,88 +343,98 @@ export function Dashboard() {
             />
 
             {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-300">Total P&L</CardTitle>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <ModernCard variant="glass" className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium text-muted-foreground">Total P&L</h3>
                   <div className="p-2 bg-green-500/20 rounded-lg">
-                    <DollarSign className="h-4 w-4 text-green-400" />
+                    <AnimatedIcon animation="pulse">
+                      <DollarSign className="h-4 w-4 text-green-400" />
+                    </AnimatedIcon>
                   </div>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div className="space-y-2">
                   {loading ? (
-                    <div className="animate-pulse bg-slate-700 h-8 w-20 rounded"></div>
+                    <div className="animate-pulse bg-muted h-8 w-20 rounded"></div>
                   ) : (
-                    <div className="text-2xl font-bold text-green-400">
+                    <GradientText className="text-3xl font-bold text-green-400">
                       ${stats.totalPnL.toLocaleString()}
-                    </div>
+                    </GradientText>
                   )}
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-muted-foreground">
                     Including leverage effects
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </ModernCard>
 
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-300">Win Rate</CardTitle>
+              <ModernCard variant="glass" className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium text-muted-foreground">Win Rate</h3>
                   <div className="p-2 bg-blue-500/20 rounded-lg">
-                    <Target className="h-4 w-4 text-blue-400" />
+                    <AnimatedIcon animation="float">
+                      <Target className="h-4 w-4 text-blue-400" />
+                    </AnimatedIcon>
                   </div>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div className="space-y-2">
                   {loading ? (
-                    <div className="animate-pulse bg-slate-700 h-8 w-20 rounded"></div>
+                    <div className="animate-pulse bg-muted h-8 w-20 rounded"></div>
                   ) : (
-                    <div className="text-2xl font-bold text-white">{stats.winRate}%</div>
+                    <GradientText className="text-3xl font-bold text-blue-400">
+                      {stats.winRate}%
+                    </GradientText>
                   )}
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-muted-foreground">
                     {stats.totalTrades} total trades
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </ModernCard>
 
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-300">Avg Win</CardTitle>
+              <ModernCard variant="glass" className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium text-muted-foreground">Avg Win</h3>
                   <div className="p-2 bg-green-500/20 rounded-lg">
-                    <TrendingUp className="h-4 w-4 text-green-400" />
+                    <AnimatedIcon animation="bounce">
+                      <TrendingUp className="h-4 w-4 text-green-400" />
+                    </AnimatedIcon>
                   </div>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div className="space-y-2">
                   {loading ? (
-                    <div className="animate-pulse bg-slate-700 h-8 w-20 rounded"></div>
+                    <div className="animate-pulse bg-muted h-8 w-20 rounded"></div>
                   ) : (
-                    <div className="text-2xl font-bold text-green-400">
+                    <GradientText className="text-3xl font-bold text-green-400">
                       ${stats.avgWin}
-                    </div>
+                    </GradientText>
                   )}
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-muted-foreground">
                     Per winning trade
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </ModernCard>
 
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-300">Avg Loss</CardTitle>
+              <ModernCard variant="glass" className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium text-muted-foreground">Avg Loss</h3>
                   <div className="p-2 bg-red-500/20 rounded-lg">
-                    <TrendingDown className="h-4 w-4 text-red-400" />
+                    <AnimatedIcon animation="pulse">
+                      <TrendingDown className="h-4 w-4 text-red-400" />
+                    </AnimatedIcon>
                   </div>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div className="space-y-2">
                   {loading ? (
-                    <div className="animate-pulse bg-slate-700 h-8 w-20 rounded"></div>
+                    <div className="animate-pulse bg-muted h-8 w-20 rounded"></div>
                   ) : (
-                    <div className="text-2xl font-bold text-red-400">
+                    <GradientText className="text-3xl font-bold text-red-400">
                       ${stats.avgLoss}
-                    </div>
+                    </GradientText>
                   )}
-                  <p className="text-xs text-slate-400">
+                  <p className="space-y-2">
                     Per losing trade
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </ModernCard>
             </div>
 
             {/* Performance Chart and P&L Calendar */}
