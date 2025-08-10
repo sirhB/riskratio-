@@ -324,7 +324,7 @@ export function Dashboard() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 relative">
         <BreadcrumbNav currentTab={activeTab} onNavigate={handleNavigate} />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -584,6 +584,17 @@ export function Dashboard() {
 
       {/* Keyboard Shortcuts */}
       <KeyboardShortcuts onAction={handleKeyboardAction} />
+
+      {/* Floating Action Button */}
+      <FloatingActionButton
+        onClick={() => setShowTradeForm(true)}
+        position="bottom-right"
+        className="bg-gradient-to-r from-primary to-accent shadow-2xl"
+      >
+        <AnimatedIcon animation="bounce">
+          <Plus className="h-6 w-6" />
+        </AnimatedIcon>
+      </FloatingActionButton>
 
       {/* PWA Registration */}
       <PWARegistration 

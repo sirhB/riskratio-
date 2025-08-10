@@ -5,8 +5,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
+  ModernCard, 
+  ModernButton, 
+  ModernBadge, 
+  GradientText, 
+  AnimatedIcon,
+  GlassContainer
+} from "./modern-design-system"
+import { 
   Plus, TrendingUp, Bell, BarChart3, Target, AlertTriangle, 
-  DollarSign, Clock, Users, Zap, Activity, Calendar
+  DollarSign, Clock, Users, Zap, Activity, Calendar, ArrowRight
 } from "lucide-react"
 import { authenticatedFetch } from "@/lib/api-client"
 
@@ -82,55 +90,56 @@ export function QuickActions({ onAddTrade, onNavigate, stats }: QuickActionsProp
   return (
     <div className="space-y-6">
       {/* Quick Actions Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {quickActions.map((action, index) => (
-          <Card 
+          <ModernCard 
             key={index}
-            className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-200 cursor-pointer group"
+            variant="glass"
+            className="p-6 cursor-pointer group hover:scale-105 transition-transform duration-300"
             onClick={action.action}
           >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${action.bgColor}`}>
-                    <action.icon className={`h-5 w-5 bg-gradient-to-r ${action.color} bg-clip-text text-transparent`} />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-white group-hover:text-blue-300 transition-colors">
-                      {action.title}
-                    </h3>
-                    <p className="text-sm text-slate-400">{action.description}</p>
-                  </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className={`p-3 rounded-xl ${action.bgColor} group-hover:scale-110 transition-transform duration-300`}>
+                  <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 100}>
+                    <action.icon className={`h-6 w-6 bg-gradient-to-r ${action.color} bg-clip-text text-transparent`} />
+                  </AnimatedIcon>
                 </div>
-                {action.badge && (
-                  <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
-                    {action.badge}
-                  </Badge>
-                )}
+                <div>
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {action.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{action.description}</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+              {action.badge && (
+                <ModernBadge variant="error" className="animate-pulse">
+                  {action.badge}
+                </ModernBadge>
+              )}
+            </div>
+          </ModernCard>
         ))}
       </div>
 
       {/* Recent Trades Preview */}
-      <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-white">Recent Trades</CardTitle>
-              <CardDescription className="text-slate-400">Your latest trading activity</CardDescription>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => onNavigate("trades")}
-              className="text-slate-400 hover:text-white"
-            >
-              View All
-            </Button>
+      <ModernCard variant="glass" className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <GradientText className="text-xl font-bold">Recent Trades</GradientText>
+            <p className="text-sm text-muted-foreground mt-1">Your latest trading activity</p>
           </div>
-        </CardHeader>
+          <ModernButton 
+            variant="ghost" 
+            size="sm"
+            onClick={() => onNavigate("trades")}
+          >
+            <AnimatedIcon animation="float" className="mr-2">
+              <ArrowRight className="h-4 w-4" />
+            </AnimatedIcon>
+            View All
+          </ModernButton>
+        </div>
         <CardContent>
           {loading ? (
             <div className="space-y-3">
