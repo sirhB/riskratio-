@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { TrendingUp, TrendingDown, DollarSign, Target, BarChart3, Plus, Filter, Search, Moon, Sun, Settings, Globe } from 'lucide-react'
+import { TrendingUp, TrendingDown, DollarSign, Target, BarChart3, Plus, Filter, Search, Moon, Sun, Settings, Globe, HelpCircle } from 'lucide-react'
 import { TradeForm } from "./trade-form"
 import { TradeHistory } from "./trade-history"
 import { PerformanceChart } from "./performance-chart"
@@ -13,6 +13,23 @@ import { CalendarView } from "./calendar-view"
 import { PnLCalendar } from "./pnl-calendar"
 import { SettingsPage } from "./settings-page"
 import { EconomicCalendar } from "./economic-calendar"
+import { PriceAlerts } from "./price-alerts"
+import { RiskManagement } from "./risk-management"
+import { PerformanceAnalytics } from "./performance-analytics"
+import { TradeSuggestions } from "./trade-suggestions"
+import { SocialFeatures } from "./social-features"
+import { AdvancedCharting } from "./advanced-charting"
+import { AdvancedAI } from "./advanced-ai"
+import { BrokerIntegrations } from "./broker-integrations"
+import { MobileApp } from "./mobile-app"
+import { QuickActions } from "./quick-actions"
+import { BreadcrumbNav } from "./breadcrumb-nav"
+import { GlobalSearch } from "./global-search"
+import { ResponsiveTabs } from "./responsive-tabs"
+import { OnboardingTour } from "./onboarding-tour"
+import { ToastNotifications, useToast } from "./toast-notifications"
+import { KeyboardShortcuts } from "./keyboard-shortcuts"
+import { PWARegistration } from "./pwa-registration"
 import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
 import { useRouter } from 'next/navigation'
@@ -34,8 +51,11 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [isClient, setIsClient] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [alertCount, setAlertCount] = useState(0)
   const { theme, setTheme } = useTheme()
   const router = useRouter()
+  const toast = useToast()
 
   // Handle client-side mounting
   useEffect(() => {
@@ -55,6 +75,12 @@ export function Dashboard() {
     try {
       const parsedUser = JSON.parse(userData)
       setUser(parsedUser)
+      
+      // Check if user is new and show onboarding
+      const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding')
+      if (!hasSeenOnboarding && parsedUser.id) {
+        setShowOnboarding(true)
+      }
     } catch (error) {
       console.error('Error parsing user data:', error)
       router.push('/')
@@ -74,16 +100,23 @@ export function Dashboard() {
           setStats(data.stats)
         } else {
           console.error('Failed to fetch stats:', data.error)
+          toast.error('Error', 'Failed to load trading statistics')
         }
       } catch (error) {
         console.error('Error fetching stats:', error)
+        toast.error('Error', 'Failed to load trading statistics')
       } finally {
         setLoading(false)
       }
     }
 
     fetchStats()
-  }, [user])
+  }, [user, toast])
+
+  // Mock alert count (in real app, fetch from alerts API)
+  useEffect(() => {
+    setAlertCount(Math.floor(Math.random() * 5))
+  }, [])
 
   // Show loading state while checking authentication
   if (!isClient || !user) {
@@ -94,9 +127,107 @@ export function Dashboard() {
     )
   }
 
+  const handleNavigate = (tab: string, itemId?: string) => {
+    setActiveTab(tab)
+    // Handle specific item navigation if needed
+    if (itemId) {
+      // Could scroll to specific trade or highlight item
+      console.log(`Navigate to ${tab} with item ${itemId}`)
+    }
+  }
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+    localStorage.setItem('hasSeenOnboarding', 'true')
+    toast.success('Welcome!', 'You\'re all set to start trading. Explore the features and add your first trade!')
+  }
+
+  const handleKeyboardAction = (action: string) => {
+    switch (action) {
+      case 'dashboard':
+      case 'trades':
+      case 'analytics':
+      case 'charting':
+      case 'settings':
+        setActiveTab(action)
+        break
+      case 'new-trade':
+        setShowTradeForm(true)
+        break
+      case 'search':
+        // Focus search input
+        document.querySelector('input[placeholder*="Search"]')?.focus()
+        break
+      case 'refresh':
+        // Refresh data
+        window.location.reload()
+        break
+      case 'help':
+        setShowOnboarding(true)
+        break
+      case 'long':
+      case 'short':
+      case 'close':
+      case 'alert':
+        toast.info('Feature', `${action} action triggered`)
+        break
+      case 'performance':
+      case 'risk':
+      case 'ai':
+      case 'community':
+        setActiveTab(action === 'performance' ? 'analytics' : action)
+        break
+    }
+  }
+
   // If settings tab is active, show settings page
   if (activeTab === "settings") {
     return <SettingsPage />
+  }
+
+  // If price alerts tab is active, show price alerts page
+  if (activeTab === "alerts") {
+    return <PriceAlerts />
+  }
+
+  // If risk management tab is active, show risk management page
+  if (activeTab === "risk") {
+    return <RiskManagement />
+  }
+
+  // If analytics tab is active, show performance analytics page
+  if (activeTab === "analytics") {
+    return <PerformanceAnalytics />
+  }
+
+  // If suggestions tab is active, show trade suggestions page
+  if (activeTab === "suggestions") {
+    return <TradeSuggestions />
+  }
+
+  // If social tab is active, show social features page
+  if (activeTab === "social") {
+    return <SocialFeatures />
+  }
+
+  // If charting tab is active, show advanced charting page
+  if (activeTab === "charting") {
+    return <AdvancedCharting />
+  }
+
+  // If ai tab is active, show advanced AI page
+  if (activeTab === "ai") {
+    return <AdvancedAI />
+  }
+
+  // If broker tab is active, show broker integrations page
+  if (activeTab === "broker") {
+    return <BrokerIntegrations />
+  }
+
+  // If mobile tab is active, show mobile app page
+  if (activeTab === "mobile") {
+    return <MobileApp />
   }
 
   return (
@@ -119,10 +250,20 @@ export function Dashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
+              <GlobalSearch onNavigate={handleNavigate} />
               <div className="text-right hidden sm:block">
                 <div className="text-sm text-white">{user.full_name || user.fullName}</div>
                 <div className="text-xs text-slate-400">{user.email}</div>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowOnboarding(true)}
+                className="text-slate-400 hover:text-white"
+                title="Help & Tour"
+              >
+                <HelpCircle className="h-4 w-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"
@@ -163,19 +304,23 @@ export function Dashboard() {
       </header>
 
       <div className="container mx-auto px-4 py-6">
+        <BreadcrumbNav currentTab={activeTab} onNavigate={handleNavigate} />
+        
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-slate-800/50 border border-slate-700/50">
-            <TabsTrigger value="dashboard" className="data-[state=active]:bg-slate-700">Dashboard</TabsTrigger>
-            <TabsTrigger value="trades" className="data-[state=active]:bg-slate-700">Trades</TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-slate-700">Analytics</TabsTrigger>
-            <TabsTrigger value="calendar" className="data-[state=active]:bg-slate-700">Calendar</TabsTrigger>
-            <TabsTrigger value="economic" className="data-[state=active]:bg-slate-700">
-              <Globe className="h-4 w-4 mr-2" />
-              Economic
-            </TabsTrigger>
-          </TabsList>
+          <ResponsiveTabs 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+            alertCount={alertCount}
+          />
 
           <TabsContent value="dashboard" className="space-y-6">
+            {/* Quick Actions */}
+            <QuickActions 
+              onAddTrade={() => setShowTradeForm(true)}
+              onNavigate={handleNavigate}
+              stats={stats}
+            />
+
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
@@ -392,6 +537,28 @@ export function Dashboard() {
       {showTradeForm && (
         <TradeForm onClose={() => setShowTradeForm(false)} />
       )}
+
+      {/* Onboarding Tour */}
+      <OnboardingTour 
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onComplete={handleOnboardingComplete}
+      />
+
+      {/* Toast Notifications */}
+      <ToastNotifications 
+        toasts={toast.toasts}
+        onDismiss={toast.dismissToast}
+      />
+
+      {/* Keyboard Shortcuts */}
+      <KeyboardShortcuts onAction={handleKeyboardAction} />
+
+      {/* PWA Registration */}
+      <PWARegistration 
+        onInstall={() => toast.success('App Installed', 'RiskRat.io has been installed successfully!')}
+        onUpdate={() => toast.info('App Updated', 'RiskRat.io has been updated to the latest version.')}
+      />
     </div>
   )
 }
