@@ -195,7 +195,7 @@ export function QuickActions({ onAddTrade, onNavigate, stats }: QuickActionsProp
             </div>
           )}
         </CardContent>
-      </Card>
+      </ModernCard>
     </div>
   )
 }
