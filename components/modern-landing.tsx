@@ -1,6 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
-import { useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { AuthModal } from "./auth-modal"
 import { 
   ModernCard, 
@@ -20,7 +19,6 @@ import {
 import { motion } from "framer-motion"
 import Particles from "react-tsparticles"
 import { loadFull } from "tsparticles"
-import { useCallback } from "react"
 
 export function ModernLanding() {
   const [isVisible, setIsVisible] = useState(false)
@@ -75,14 +73,15 @@ export function ModernLanding() {
     { label: "Countries", value: "50+", icon: Globe }
   ]
 
-  // Scroll helpers
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
-  const particlesInit = useCallback(async (engine) => {
+  // Fallback to unknown to avoid version/type conflicts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const particlesInit = useCallback(async (engine: any) => {
     await loadFull(engine)
   }, [])
 
@@ -109,33 +108,33 @@ export function ModernLanding() {
       {/* Sticky Navbar */}
       <motion.header initial={{ y: -60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7 }} className="sticky top-0 z-20 border-b border-gray-800 bg-black/80 backdrop-blur-xl shadow-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <PulseEffect>
+          <div className="flex items-center space-x-3">
+            <PulseEffect>
               <div className="p-2 bg-gradient-to-r from-purple-700 to-cyan-600 rounded-xl shadow-lg">
-                  <AnimatedIcon animation="float">
+                <AnimatedIcon animation="float">
                   <BarChart3 className="h-6 w-6 text-white" />
-                  </AnimatedIcon>
-                </div>
-              </PulseEffect>
+                </AnimatedIcon>
+              </div>
+            </PulseEffect>
             <GradientText className="text-2xl font-extrabold tracking-tight">
-                RiskRat.io
-              </GradientText>
-            </div>
+              RiskRat.io
+            </GradientText>
+          </div>
           <nav className="flex items-center space-x-4">
             <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(featuresRef)} className="text-gray-200 hover:text-white">
-                Features
-              </ModernButton>
+              Features
+            </ModernButton>
             <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(pricingRef)} className="text-gray-200 hover:text-white">
-                Pricing
-              </ModernButton>
+              Pricing
+            </ModernButton>
             <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(aboutRef)} className="text-gray-200 hover:text-white">
-                About
-              </ModernButton>
+              About
+            </ModernButton>
             <ModernButton variant="gradient" size="sm" onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }} className="shadow-glow animate-pulse">
-                Get Started
-              </ModernButton>
+              Get Started
+            </ModernButton>
           </nav>
-            </div>
+        </div>
       </motion.header>
       {/* Hero Section */}
       <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative z-10 py-28 px-4 flex flex-col items-center justify-center min-h-[70vh]">
@@ -148,7 +147,7 @@ export function ModernLanding() {
               Trusted by 10,000+ Professional Traders
             </ModernBadge>
             <h1 className="text-6xl md:text-7xl font-extrabold mb-6 animate-gradient-x bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent">
-                Master Your Trading
+              Master Your Trading
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               The ultimate trading journal and risk management platform for futures and forex traders. Track performance, manage risk, and make data-driven decisions.
@@ -168,7 +167,7 @@ export function ModernLanding() {
               </ModernButton>
             </div>
           </motion.div>
-          </div>
+        </div>
       </motion.section>
       {/* Features Section */}
       <motion.section ref={featuresRef} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative z-10 py-20 px-4">
@@ -186,16 +185,16 @@ export function ModernLanding() {
               <motion.div key={index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
                 <ModernCard variant="glass" className={`p-8 text-center transition-all duration-500 bg-black/70 border-gray-800 ${currentFeature === index ? 'scale-105 shadow-2xl' : 'scale-100'}`}>
                   <div className={`p-4 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 mx-auto w-16 h-16 flex items-center justify-center animate-pulse`}>
-                  <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 200}>
-                    {(() => {
-                      const IconComponent = feature.icon;
-                      return <IconComponent className="h-8 w-8 text-white" />;
-                    })()}
-                  </AnimatedIcon>
-                </div>
+                    <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 200}>
+                      {(() => {
+                        const IconComponent = feature.icon;
+                        return <IconComponent className="h-8 w-8 text-white" />;
+                      })()}
+                    </AnimatedIcon>
+                  </div>
                   <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
                   <p className="text-gray-400">{feature.description}</p>
-              </ModernCard>
+                </ModernCard>
               </motion.div>
             ))}
           </div>
@@ -274,6 +273,61 @@ export function ModernLanding() {
                 <img src={t.avatar} alt={t.name} className="w-16 h-16 rounded-full mx-auto mb-4 border-2 border-cyan-400" />
                 <p className="text-gray-200 text-lg mb-4">“{t.text}”</p>
                 <span className="text-cyan-400 font-bold">{t.name}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+      {/* Feature List (detailed) */}
+      <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative z-10 py-20 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-white">Everything You Need</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[ 
+              { title: 'Performance Analytics', desc: 'Deep insights, KPIs, and trend analysis', color: 'from-green-500 to-emerald-600' },
+              { title: 'Risk Management', desc: 'Position sizing and portfolio risk tools', color: 'from-red-500 to-pink-600' },
+              { title: 'Advanced Charting', desc: 'Trade overlays and technical indicators', color: 'from-cyan-500 to-blue-600' },
+              { title: 'AI Suggestions', desc: 'Smart trade ideas and pattern detection', color: 'from-purple-500 to-pink-600' },
+              { title: 'Price Alerts', desc: 'Get notified instantly on key levels', color: 'from-amber-500 to-orange-600' },
+              { title: 'Community', desc: 'Share insights and learn from others', color: 'from-teal-500 to-green-600' },
+            ].map((f, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="bg-black/80 border border-gray-800 rounded-xl p-6 hover:scale-[1.02] transition-transform">
+                <div className={`inline-block px-3 py-1 rounded-full text-xs text-white mb-3 bg-gradient-to-r ${f.color}`}>{f.title}</div>
+                <p className="text-gray-300">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Pricing Section */}
+      <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative z-10 py-20 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Simple, Transparent Pricing</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {[
+              { name: 'Starter', price: '$0', period: '/mo', features: ['Basic Analytics', '10 Trades / mo', 'Community Access'], cta: 'Get Started', color: 'from-gray-700 to-gray-600' },
+              { name: 'Trader', price: '$19', period: '/mo', features: ['Full Analytics', 'Unlimited Trades', 'Price Alerts', 'Advanced Charting'], cta: 'Start Trial', color: 'from-green-600 to-emerald-600', highlight: true },
+              { name: 'Pro', price: '$39', period: '/mo', features: ['All Features', 'AI Suggestions', 'Priority Support'], cta: 'Go Pro', color: 'from-red-600 to-pink-600' },
+            ].map((p, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className={`rounded-2xl p-6 bg-black/80 border border-gray-800 ${p.highlight ? 'ring-2 ring-green-500/50' : ''}`}>
+                <div className="mb-4">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs text-white bg-gradient-to-r ${p.color}`}>{p.name}</span>
+                </div>
+                <div className="flex items-end space-x-1 mb-4">
+                  <span className="text-4xl font-extrabold text-white">{p.price}</span>
+                  <span className="text-gray-400">{p.period}</span>
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {p.features.map((f: string, idx: number) => (
+                    <li key={idx} className="flex items-center text-gray-300">
+                      <CheckCircle className="h-4 w-4 text-green-400 mr-2" /> {f}
+                    </li>
+                  ))}
+                </ul>
+                <ModernButton variant={p.highlight ? 'gradient' : 'outline'} size="lg" className="w-full" onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }}>
+                  {p.cta}
+                </ModernButton>
               </motion.div>
             ))}
           </div>
