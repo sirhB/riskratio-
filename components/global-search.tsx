@@ -195,7 +195,10 @@ export function GlobalSearch({ onNavigate }: GlobalSearchProps) {
                         : 'border-slate-600 text-slate-300 hover:text-white'
                     }`}
                   >
-                    <filter.icon className="h-3 w-3 mr-1" />
+                    {(() => {
+                      const IconComponent = filter.icon;
+                      return <IconComponent className="h-3 w-3 mr-1" />;
+                    })()}
                     {filter.label}
                   </Button>
                 ))}

@@ -170,7 +170,10 @@ export function ModernLanding() {
               >
                 <div className={`p-4 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 mx-auto w-16 h-16 flex items-center justify-center`}>
                   <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 200}>
-                    <feature.icon className="h-8 w-8 text-white" />
+                    {(() => {
+                      const IconComponent = feature.icon;
+                      return <IconComponent className="h-8 w-8 text-white" />;
+                    })()}
                   </AnimatedIcon>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-foreground">{feature.title}</h3>
@@ -189,7 +192,10 @@ export function ModernLanding() {
               <div key={index} className="text-center">
                 <div className="mb-4">
                   <AnimatedIcon animation="pulse" delay={index * 100}>
-                    <stat.icon className="h-8 w-8 text-primary mx-auto" />
+                    {(() => {
+                      const IconComponent = stat.icon;
+                      return <IconComponent className="h-8 w-8 text-primary mx-auto" />;
+                    })()}
                   </AnimatedIcon>
                 </div>
                 <GradientText className="text-3xl font-bold block mb-2">

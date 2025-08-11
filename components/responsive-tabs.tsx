@@ -186,7 +186,10 @@ export function ResponsiveTabs({ activeTab, onTabChange, alertCount = 0 }: Respo
             }`}
           >
             <div className="flex items-center space-x-1">
-              <tab.icon className="h-3 w-3" />
+              {(() => {
+                const IconComponent = tab.icon;
+                return <IconComponent className="h-3 w-3" />;
+              })()}
               <span className="hidden sm:inline">{tab.label}</span>
             </div>
             {tab.badge && alertCount > 0 && (
@@ -207,7 +210,10 @@ export function ResponsiveTabs({ activeTab, onTabChange, alertCount = 0 }: Respo
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-            <getCurrentTabInfo().icon className="h-4 w-4 text-white" />
+            {(() => {
+              const IconComponent = getCurrentTabInfo().icon;
+              return <IconComponent className="h-4 w-4 text-white" />;
+            })()}
           </div>
           <div>
             <h2 className="text-lg font-semibold text-white">{getCurrentTabInfo().label}</h2>
@@ -262,7 +268,10 @@ export function ResponsiveTabs({ activeTab, onTabChange, alertCount = 0 }: Respo
                         }`}
                       >
                         <div className="flex items-center space-x-3">
-                          <tab.icon className="h-4 w-4" />
+                          {(() => {
+                            const IconComponent = tab.icon;
+                            return <IconComponent className="h-4 w-4" />;
+                          })()}
                           <span>{tab.mobileLabel}</span>
                           {tab.badge && alertCount > 0 && (
                             <Badge className="ml-auto bg-red-500 text-white text-xs">
@@ -294,7 +303,10 @@ export function ResponsiveTabs({ activeTab, onTabChange, alertCount = 0 }: Respo
                 : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
             }`}
           >
-            <tab.icon className="h-4 w-4" />
+            {(() => {
+              const IconComponent = tab.icon;
+              return <IconComponent className="h-4 w-4" />;
+            })()}
             <span className="text-xs">{tab.mobileLabel}</span>
           </Button>
         ))}

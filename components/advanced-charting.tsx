@@ -434,7 +434,10 @@ export function AdvancedCharting() {
                     className="flex flex-col items-center gap-2 h-20"
                     onClick={() => activateDrawingTool(tool.id)}
                   >
-                    <tool.icon className="h-5 w-5" />
+                    {(() => {
+                      const IconComponent = tool.icon;
+                      return <IconComponent className="h-5 w-5" />;
+                    })()}
                     <span className="text-xs">{tool.name}</span>
                   </Button>
                 ))}

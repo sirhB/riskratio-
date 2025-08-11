@@ -125,7 +125,10 @@ export function OnboardingTour({ isOpen, onClose, onComplete }: OnboardingTourPr
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className={`p-2 rounded-lg ${currentTourStep.bgColor}`}>
-                <currentTourStep.icon className={`h-6 w-6 bg-gradient-to-r ${currentTourStep.color} bg-clip-text text-transparent`} />
+                {(() => {
+                  const IconComponent = currentTourStep.icon;
+                  return <IconComponent className={`h-6 w-6 bg-gradient-to-r ${currentTourStep.color} bg-clip-text text-transparent`} />;
+                })()}
               </div>
               <div>
                 <CardTitle className="text-white">{currentTourStep.title}</CardTitle>
@@ -176,13 +179,16 @@ export function OnboardingTour({ isOpen, onClose, onComplete }: OnboardingTourPr
                     }`}
                   >
                     <div className="flex items-center space-x-2">
-                      <step.icon className={`h-4 w-4 ${
-                        index === currentStep
-                          ? 'text-blue-400'
-                          : completedSteps.includes(index)
-                          ? 'text-green-400'
-                          : 'text-slate-400'
-                      }`} />
+                      {(() => {
+                        const IconComponent = step.icon;
+                        return <IconComponent className={`h-4 w-4 ${
+                          index === currentStep
+                            ? 'text-blue-400'
+                            : completedSteps.includes(index)
+                            ? 'text-green-400'
+                            : 'text-slate-400'
+                        }`} />;
+                      })()}
                       <span className={`text-xs font-medium ${
                         index === currentStep
                           ? 'text-blue-300'

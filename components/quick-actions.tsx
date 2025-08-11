@@ -102,7 +102,10 @@ export function QuickActions({ onAddTrade, onNavigate, stats }: QuickActionsProp
               <div className="flex items-center space-x-4">
                 <div className={`p-3 rounded-xl ${action.bgColor} group-hover:scale-110 transition-transform duration-300`}>
                   <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 100}>
-                    <action.icon className={`h-6 w-6 bg-gradient-to-r ${action.color} bg-clip-text text-transparent`} />
+                    {(() => {
+                      const IconComponent = action.icon;
+                      return <IconComponent className={`h-6 w-6 bg-gradient-to-r ${action.color} bg-clip-text text-transparent`} />;
+                    })()}
                   </AnimatedIcon>
                 </div>
                 <div>
