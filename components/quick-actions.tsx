@@ -57,8 +57,8 @@ export function QuickActions({ onAddTrade, onNavigate, stats }: QuickActionsProp
       description: "Record a new trade",
       icon: Plus,
       action: onAddTrade,
-      color: "from-blue-500 to-purple-600",
-      bgColor: "bg-gradient-to-r from-blue-500/20 to-purple-600/20"
+      color: "from-green-500 to-emerald-600",
+      bgColor: "bg-gradient-to-r from-green-500/20 to-emerald-600/20"
     },
     {
       title: "Today's P&L",

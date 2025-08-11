@@ -125,7 +125,7 @@ const tabConfig = [
 ]
 
 const categories = [
-  { id: "Trading", label: "Trading", color: "from-blue-500 to-purple-600" },
+  { id: "Trading", label: "Trading", color: "from-green-500 to-emerald-600" },
   { id: "Analysis", label: "Analysis", color: "from-green-500 to-emerald-600" },
   { id: "Tools", label: "Tools", color: "from-orange-500 to-red-600" },
   { id: "Community", label: "Community", color: "from-indigo-500 to-blue-600" },
@@ -209,7 +209,7 @@ export function ResponsiveTabs({ activeTab, onTabChange, alertCount = 0 }: Respo
       {/* Mobile Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+          <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
             {(() => {
               const IconComponent = getCurrentTabInfo().icon;
               return <IconComponent className="h-4 w-4 text-white" />;

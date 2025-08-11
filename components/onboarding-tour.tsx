@@ -22,8 +22,8 @@ const tourSteps = [
     title: "Welcome to RiskRat.io",
     description: "Your comprehensive trading journal and risk management platform. Let's take a quick tour of the key features.",
     icon: BarChart3,
-    color: "from-blue-500 to-purple-600",
-    bgColor: "bg-gradient-to-r from-blue-500/20 to-purple-600/20"
+    color: "from-green-500 to-emerald-600",
+    bgColor: "bg-gradient-to-r from-green-500/20 to-emerald-600/20"
   },
   {
     id: 2,
@@ -54,16 +54,16 @@ const tourSteps = [
     title: "AI-Powered Insights",
     description: "Get intelligent trade suggestions, market analysis, and pattern recognition to improve your trading decisions.",
     icon: Brain,
-    color: "from-purple-500 to-pink-600",
-    bgColor: "bg-gradient-to-r from-purple-500/20 to-pink-600/20"
+    color: "from-green-500 to-emerald-600",
+    bgColor: "bg-gradient-to-r from-green-500/20 to-emerald-600/20"
   },
   {
     id: 6,
     title: "Community & Learning",
     description: "Connect with other traders, share insights, and learn from the community's collective experience.",
     icon: Users,
-    color: "from-indigo-500 to-blue-600",
-    bgColor: "bg-gradient-to-r from-indigo-500/20 to-blue-600/20"
+    color: "from-green-500 to-emerald-600",
+    bgColor: "bg-gradient-to-r from-green-500/20 to-emerald-600/20"
   },
   {
     id: 7,

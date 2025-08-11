@@ -29,7 +29,7 @@ export function LandingPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
+              <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl">
                 <BarChart3 className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -53,7 +53,7 @@ export function LandingPage() {
               </Button>
               <Button 
                 onClick={handleGetStarted}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
               >
                 Get Started
               </Button>
@@ -86,7 +86,7 @@ export function LandingPage() {
                 </Button>
                 <Button 
                   onClick={handleGetStarted}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
                 >
                   Get Started
                 </Button>
@@ -99,7 +99,7 @@ export function LandingPage() {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto text-center">
-          <Badge className="mb-6 bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20">
+          <Badge className="mb-6 bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20">
             <Zap className="h-3 w-3 mr-1" />
             Professional Trading Analytics
           </Badge>
@@ -107,7 +107,7 @@ export function LandingPage() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent leading-tight">
             Master Your
             <br />
-            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
               Trading Edge
             </span>
           </h1>
@@ -121,7 +121,7 @@ export function LandingPage() {
             <Button 
               size="lg"
               onClick={handleGetStarted}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-blue-500/25"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl shadow-green-500/25"
             >
               Start Free Trial
               <ArrowRight className="ml-2 h-5 w-5" />

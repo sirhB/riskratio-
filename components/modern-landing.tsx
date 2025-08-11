@@ -1,5 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useRef } from "react"
+import { AuthModal } from "./auth-modal"
 import { 
   ModernCard, 
   ModernButton, 
@@ -19,6 +21,13 @@ import {
 export function ModernLanding() {
   const [isVisible, setIsVisible] = useState(false)
   const [currentFeature, setCurrentFeature] = useState(0)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup')
+
+  // Section refs for smooth scroll
+  const featuresRef = useRef<HTMLDivElement>(null)
+  const pricingRef = useRef<HTMLDivElement>(null)
+  const aboutRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsVisible(true)
@@ -62,8 +71,23 @@ export function ModernLanding() {
     { label: "Countries", value: "50+", icon: Globe }
   ]
 
+  // Scroll helpers
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background overflow-hidden">
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <AuthModal
+          mode={authMode}
+          onClose={() => setShowAuthModal(false)}
+          onSwitchMode={setAuthMode}
+        />
+      )}
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-float"></div>
@@ -88,16 +112,16 @@ export function ModernLanding() {
               </GradientText>
             </div>
             <div className="flex items-center space-x-4">
-              <ModernButton variant="ghost" size="sm">
+              <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(featuresRef)}>
                 Features
               </ModernButton>
-              <ModernButton variant="ghost" size="sm">
+              <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(pricingRef)}>
                 Pricing
               </ModernButton>
-              <ModernButton variant="ghost" size="sm">
+              <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(aboutRef)}>
                 About
               </ModernButton>
-              <ModernButton variant="gradient" size="sm">
+              <ModernButton variant="gradient" size="sm" onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }}>
                 Get Started
               </ModernButton>
             </div>
@@ -130,13 +154,13 @@ export function ModernLanding() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <ModernButton variant="gradient" size="lg" className="text-lg px-8 py-4">
+              <ModernButton variant="gradient" size="lg" className="text-lg px-8 py-4" onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }}>
                 <AnimatedIcon animation="bounce" className="mr-2">
                   <Play className="h-5 w-5" />
                 </AnimatedIcon>
                 Start Free Trial
               </ModernButton>
-              <ModernButton variant="outline" size="lg" className="text-lg px-8 py-4">
+              <ModernButton variant="outline" size="lg" className="text-lg px-8 py-4" onClick={() => alert('Demo video coming soon!')}>
                 <AnimatedIcon animation="float" className="mr-2">
                   <ArrowRight className="h-5 w-5" />
                 </AnimatedIcon>
@@ -148,7 +172,7 @@ export function ModernLanding() {
       </section>
 
       {/* Features Section */}
-      <section className="relative z-10 py-20 px-4">
+      <section ref={featuresRef} className="relative z-10 py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">
@@ -209,7 +233,7 @@ export function ModernLanding() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative z-10 py-20 px-4">
+      <section ref={pricingRef} className="relative z-10 py-20 px-4">
         <div className="container mx-auto">
           <GlassContainer className="text-center max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold mb-6">
@@ -219,13 +243,13 @@ export function ModernLanding() {
               Join thousands of traders who have improved their performance with RiskRat.io
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <ModernButton variant="gradient" size="lg" className="text-lg px-8 py-4">
+              <ModernButton variant="gradient" size="lg" className="text-lg px-8 py-4" onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }}>
                 <AnimatedIcon animation="bounce" className="mr-2">
                   <Zap className="h-5 w-5" />
                 </AnimatedIcon>
                 Get Started Free
               </ModernButton>
-              <ModernButton variant="outline" size="lg" className="text-lg px-8 py-4">
+              <ModernButton variant="outline" size="lg" className="text-lg px-8 py-4" onClick={() => alert('Community features coming soon!')}>
                 <AnimatedIcon animation="float" className="mr-2">
                   <Users className="h-5 w-5" />
                 </AnimatedIcon>
@@ -236,8 +260,8 @@ export function ModernLanding() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-border/50 bg-card/30 backdrop-blur-xl py-12 px-4">
+      {/* Footer (About section anchor) */}
+      <footer ref={aboutRef} className="relative z-10 border-t border-border/50 bg-card/30 backdrop-blur-xl py-12 px-4">
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
