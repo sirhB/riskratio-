@@ -42,12 +42,13 @@ import {
 } from "./modern-design-system"
 import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { authenticatedFetch } from '@/lib/api-client'
 import { SidebarNav } from "./responsive-tabs"
 
 export function Dashboard() {
   const [showTradeForm, setShowTradeForm] = useState(false)
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [stats, setStats] = useState({
     totalPnL: 0,
@@ -72,6 +73,25 @@ export function Dashboard() {
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  // Initialize active tab from URL query (?tab=...)
+  useEffect(() => {
+    if (!isClient) return
+    const tabFromUrl = searchParams.get('tab')
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClient])
+
+  // Keep URL in sync with the active tab without leaving /dashboard
+  useEffect(() => {
+    if (!isClient) return
+    const current = searchParams.get('tab')
+    if (current !== activeTab) {
+      router.replace(`/dashboard?tab=${activeTab}`)
+    }
+  }, [activeTab, isClient, router, searchParams])
 
   // Handle user authentication
   useEffect(() => {
