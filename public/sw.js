@@ -1,59 +1,66 @@
-const CACHE_NAME = 'riskratio-v1.0.0'
+const CACHE_NAME = 'riskratio-v1.0.1'
 const urlsToCache = [
-  '/',
-  '/dashboard',
-  '/static/css/main.css',
-  '/static/js/main.js',
-  '/manifest.json'
+  // Cache only static assets; avoid caching HTML pages to prevent stale UI
+  '/manifest.json',
 ]
 
-// Install event - cache only static GET resources
+// Install event - cache resources safely
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Opened cache')
-        // Only cache GET requests and handle errors gracefully
-        return Promise.all(
-          urlsToCache.map((url) =>
-            fetch(url, { method: 'GET' })
-              .then((response) => {
-                if (response.ok) {
-                  return cache.put(url, response)
-                }
-              })
-              .catch((err) => {
-                console.warn('Failed to cache', url, err)
-              })
+      .then(async (cache) => {
+        try {
+          await Promise.all(
+            urlsToCache.map(async (url) => {
+              const res = await fetch(url, { method: 'GET' })
+              if (res && res.ok) await cache.put(url, res)
+            })
           )
-        )
+        } catch (err) {
+          console.warn('SW install cache warn:', err)
+        }
       })
   )
 })
 
-// Fetch event - only cache GET requests and successful responses
+// Strategy helpers
+async function networkFirst(request) {
+  try {
+    const fresh = await fetch(request)
+    if (fresh && fresh.ok) {
+      const cache = await caches.open(CACHE_NAME)
+      cache.put(request, fresh.clone())
+    }
+    return fresh
+  } catch (_) {
+    const cached = await caches.match(request)
+    return cached || Response.error()
+  }
+}
+
+async function cacheFirst(request) {
+  const cached = await caches.match(request)
+  if (cached) return cached
+  const res = await fetch(request)
+  if (res && res.ok && request.method === 'GET') {
+    const cache = await caches.open(CACHE_NAME)
+    cache.put(request, res.clone())
+  }
+  return res
+}
+
+// Fetch event - network-first for HTML/navigation; cache-first for static
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return; // Only cache GET
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response
-        }
-        return fetch(event.request)
-          .then((response) => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response
-            }
-            const responseToCache = response.clone()
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache)
-              })
-            return response
-          })
-      })
-  )
+  if (event.request.method !== 'GET') return
+
+  const accept = event.request.headers.get('accept') || ''
+  const isHTML = event.request.mode === 'navigate' || accept.includes('text/html')
+
+  if (isHTML) {
+    event.respondWith(networkFirst(event.request))
+  } else {
+    event.respondWith(cacheFirst(event.request))
+  }
 })
 
 // Activate event - clean up old caches
@@ -63,7 +70,6 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName)
             return caches.delete(cacheName)
           }
         })
@@ -79,46 +85,26 @@ self.addEventListener('push', (event) => {
     icon: '/icon-192x192.png',
     badge: '/icon-72x72.png',
     vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
+    data: { dateOfArrival: Date.now(), primaryKey: 1 },
     actions: [
-      {
-        action: 'explore',
-        title: 'View Details',
-        icon: '/icon-192x192.png'
-      },
-      {
-        action: 'close',
-        title: 'Close',
-        icon: '/icon-192x192.png'
-      }
-    ]
+      { action: 'explore', title: 'View Details', icon: '/icon-192x192.png' },
+      { action: 'close', title: 'Close', icon: '/icon-192x192.png' },
+    ],
   }
-
-  event.waitUntil(
-    self.registration.showNotification('RiskRat.io', options)
-  )
+  event.waitUntil(self.registration.showNotification('RiskRat.io', options))
 })
 
 // Notification click event
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-
   if (event.action === 'explore') {
-    event.waitUntil(
-      clients.openWindow('/dashboard')
-    )
+    event.waitUntil(clients.openWindow('/dashboard'))
   }
 })
 
 // Background sync for offline data
 self.addEventListener('sync', (event) => {
   if (event.tag === 'background-sync') {
-    event.waitUntil(
-      // Sync offline data when connection is restored
-      console.log('Background sync triggered')
-    )
+    event.waitUntil(Promise.resolve())
   }
 })
