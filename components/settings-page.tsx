@@ -116,7 +116,7 @@ export function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="space-y-6">
         <div className="animate-pulse text-slate-400">Loading settings...</div>
       </div>
     )
@@ -124,7 +124,7 @@ export function SettingsPage() {
 
   if (error && !settings) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="space-y-6">
         <div className="text-center">
           <div className="text-red-400 mb-4">{error}</div>
           <Button 
@@ -159,8 +159,8 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="container mx-auto px-4 py-6">
+    <div className="space-y-6">
+      <div>
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">

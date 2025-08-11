@@ -337,7 +337,7 @@ export function PerformanceAnalytics() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="space-y-6">
         <div className="animate-pulse text-slate-400">Loading performance analytics...</div>
       </div>
     )

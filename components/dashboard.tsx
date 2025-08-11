@@ -191,65 +191,39 @@ export function Dashboard() {
     }
   }
 
-  // If settings tab is active, show settings page
-  if (activeTab === "settings") {
-    return <SettingsPage />
-  }
-
-  // If price alerts tab is active, show price alerts page
-  if (activeTab === "alerts") {
-    return <PriceAlerts />
-  }
-
-  // If risk management tab is active, show risk management page
-  if (activeTab === "risk") {
-    return <RiskManagement />
-  }
-
-  // If analytics tab is active, show performance analytics page
-  if (activeTab === "analytics") {
-    return <PerformanceAnalytics />
-  }
-
-  // If suggestions tab is active, show trade suggestions page
-  if (activeTab === "suggestions") {
-    return <TradeSuggestions />
-  }
-
-  // If social tab is active, show social features page
-  if (activeTab === "social") {
-    return <SocialFeatures />
-  }
-
-  // If charting tab is active, show advanced charting page
-  if (activeTab === "charting") {
-    return <AdvancedCharting />
-  }
-
-  // If ai tab is active, show advanced AI page
-  if (activeTab === "ai") {
-    return <AdvancedAI />
-  }
-
-  // If broker tab is active, show broker integrations page
-  if (activeTab === "broker") {
-    return <BrokerIntegrations />
-  }
-
-  // If mobile tab is active, show mobile app page
-  if (activeTab === "mobile") {
-    return <MobileApp />
-  }
-
-  return (
-    <div className="flex min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
-      {/* Sidebar Navigation */}
-      <SidebarNav activeTab={activeTab} onTabChange={setActiveTab} alertCount={alertCount} />
-      {/* Main Content */}
-      <div className="flex-1 ml-16 lg:ml-56 transition-all duration-300">
-      <div className="container mx-auto px-4 py-6 relative">
-          <BreadcrumbNav currentTab={activeTab} onNavigate={setActiveTab} />
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+  const renderContent = () => {
+    switch (activeTab) {
+      case "settings":
+        return <SettingsPage />
+      case "alerts":
+        return <PriceAlerts />
+      case "risk":
+        return <RiskManagement />
+      case "analytics":
+        return <PerformanceAnalytics />
+      case "suggestions":
+        return <TradeSuggestions />
+      case "social":
+        return <SocialFeatures />
+      case "charting":
+        return <AdvancedCharting />
+      case "ai":
+        return <AdvancedAI />
+      case "broker":
+        return <BrokerIntegrations />
+      case "mobile":
+        return <MobileApp />
+      case "trades":
+        return <TradeHistory />
+      case "calendar":
+        return <CalendarView />
+      case "pnl":
+        return <PnLCalendar />
+      case "economic":
+        return <EconomicCalendar />
+      default:
+        return (
+          <>
             {/* Quick Actions */}
             <QuickActions 
               onAddTrade={() => setShowTradeForm(true)}
@@ -409,6 +383,21 @@ export function Dashboard() {
                 </div>
               </CardContent>
             </Card>
+          </>
+        )
+    }
+  }
+
+  return (
+    <div className="flex min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      {/* Sidebar Navigation */}
+      <SidebarNav activeTab={activeTab} onTabChange={setActiveTab} alertCount={alertCount} />
+      {/* Main Content */}
+      <div className="flex-1 ml-16 lg:ml-56 transition-all duration-300">
+      <div className="container mx-auto px-4 py-6 relative">
+          <BreadcrumbNav currentTab={activeTab} onNavigate={setActiveTab} />
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            {renderContent()}
         </Tabs>
       </div>
         {/* Main Content */}
