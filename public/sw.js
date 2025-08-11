@@ -7,41 +7,49 @@ const urlsToCache = [
   '/manifest.json'
 ]
 
-// Install event - cache resources
+// Install event - cache only static GET resources
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Opened cache')
-        return cache.addAll(urlsToCache)
+        // Only cache GET requests and handle errors gracefully
+        return Promise.all(
+          urlsToCache.map((url) =>
+            fetch(url, { method: 'GET' })
+              .then((response) => {
+                if (response.ok) {
+                  return cache.put(url, response)
+                }
+              })
+              .catch((err) => {
+                console.warn('Failed to cache', url, err)
+              })
+          )
+        )
       })
   )
 })
 
-// Fetch event - serve from cache when offline
+// Fetch event - only cache GET requests and successful responses
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return; // Only cache GET
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Return cached version or fetch from network
         if (response) {
           return response
         }
         return fetch(event.request)
           .then((response) => {
-            // Check if we received a valid response
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response
             }
-
-            // Clone the response
             const responseToCache = response.clone()
-
             caches.open(CACHE_NAME)
               .then((cache) => {
                 cache.put(event.request, responseToCache)
               })
-
             return response
           })
       })

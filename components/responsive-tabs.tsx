@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge"
 import { 
   ChevronDown, ChevronUp, Menu, X, BarChart3, TrendingUp, 
   Calendar, DollarSign, Globe, Bell, Target, Lightbulb, 
-  Users, LineChart, Brain, Link, Smartphone, PieChart, Settings
+  Users, LineChart, Brain, Link, Smartphone, PieChart, Settings, ChevronRight, ChevronLeft
 } from "lucide-react"
+import { Tooltip } from "@/components/ui/tooltip"
 
 interface ResponsiveTabsProps {
   activeTab: string
@@ -132,185 +133,57 @@ const categories = [
   { id: "Settings", label: "Settings", color: "from-slate-500 to-gray-600" }
 ]
 
-export function ResponsiveTabs({ activeTab, onTabChange, alertCount = 0 }: ResponsiveTabsProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [expandedCategories, setExpandedCategories] = useState<string[]>([])
+export function SidebarNav({ activeTab, onTabChange, alertCount = 0 }: ResponsiveTabsProps) {
+  const [collapsed, setCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
     }
-    
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
-
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => 
-      prev.includes(categoryId) 
-        ? prev.filter(c => c !== categoryId)
-        : [...prev, categoryId]
-    )
-  }
-
   const handleTabClick = (tabId: string) => {
     onTabChange(tabId)
-    if (isMobile) {
-      setIsMobileMenuOpen(false)
-    }
+    if (isMobile) setCollapsed(false)
   }
-
-  const getTabsByCategory = (categoryId: string) => {
-    return tabConfig.filter(tab => tab.category === categoryId)
-  }
-
-  const getCurrentTabInfo = () => {
-    return tabConfig.find(tab => tab.id === activeTab) || tabConfig[0]
-  }
-
-  // Desktop Layout
-  if (!isMobile) {
-    return (
-      <div className="grid w-full grid-cols-16 bg-slate-800/50 border border-slate-700/50 rounded-lg overflow-hidden">
+  return (
+    <nav className={`fixed top-0 left-0 h-full z-30 bg-black/90 border-r border-gray-800 flex flex-col transition-all duration-300 ${collapsed && !isMobile ? 'w-16' : 'w-56'} ${isMobile ? 'w-0' : ''}`}
+      style={{ minHeight: '100vh' }}>
+      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-800">
+        <div className="flex items-center space-x-2">
+          <BarChart3 className="h-6 w-6 text-cyan-400" />
+          {!collapsed && <span className="text-lg font-bold text-white">RiskRat.io</span>}
+        </div>
+        <button
+          className="text-gray-400 hover:text-cyan-400 focus:outline-none"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+        </button>
+      </div>
+      <div className="flex-1 flex flex-col py-4 space-y-2 overflow-y-auto">
         {tabConfig.map((tab) => (
-          <Button
-            key={tab.id}
-            variant="ghost"
-            onClick={() => handleTabClick(tab.id)}
-            className={`relative px-3 py-2 text-xs font-medium transition-all duration-200 ${
-              activeTab === tab.id
-                ? 'bg-slate-700 text-white'
-                : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-            }`}
-          >
-            <div className="flex items-center space-x-1">
+          <Tooltip key={tab.id} content={tab.label} placement="right" disabled={!collapsed}>
+            <button
+              className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group ${activeTab === tab.id ? 'bg-cyan-900/60 text-cyan-400' : 'text-gray-300 hover:bg-gray-800/60 hover:text-white'} ${collapsed ? 'justify-center' : ''}`}
+              onClick={() => handleTabClick(tab.id)}
+              aria-label={tab.label}
+            >
               {(() => {
                 const IconComponent = tab.icon;
-                return <IconComponent className="h-3 w-3" />;
+                return <IconComponent className="h-5 w-5" />;
               })()}
-              <span className="hidden sm:inline">{tab.label}</span>
-            </div>
-            {tab.badge && alertCount > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs bg-red-500 text-white">
-                {alertCount}
-              </Badge>
-            )}
-          </Button>
+              {!collapsed && <span className="ml-3 text-base">{tab.label}</span>}
+              {tab.badge && alertCount > 0 && (
+                <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-0.5">{alertCount}</span>
+              )}
+            </button>
+          </Tooltip>
         ))}
       </div>
-    )
-  }
-
-  // Mobile Layout
-  return (
-    <div className="space-y-4">
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
-            {(() => {
-              const IconComponent = getCurrentTabInfo().icon;
-              return <IconComponent className="h-4 w-4 text-white" />;
-            })()}
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-white">{getCurrentTabInfo().label}</h2>
-            <p className="text-xs text-slate-400">{getCurrentTabInfo().category}</p>
-          </div>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="text-slate-400 hover:text-white"
-        >
-          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg overflow-hidden">
-          {categories.map((category) => {
-            const categoryTabs = getTabsByCategory(category.id)
-            const isExpanded = expandedCategories.includes(category.id)
-            
-            return (
-              <div key={category.id} className="border-b border-slate-700/50 last:border-b-0">
-                <Button
-                  variant="ghost"
-                  onClick={() => toggleCategory(category.id)}
-                  className="w-full justify-between px-4 py-3 text-left text-slate-300 hover:text-white hover:bg-slate-700/50"
-                >
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${category.color}`} />
-                    <span className="font-medium">{category.label}</span>
-                    <Badge variant="outline" className="text-xs border-slate-600 text-slate-400">
-                      {categoryTabs.length}
-                    </Badge>
-                  </div>
-                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-                
-                {isExpanded && (
-                  <div className="bg-slate-700/20">
-                    {categoryTabs.map((tab) => (
-                      <Button
-                        key={tab.id}
-                        variant="ghost"
-                        onClick={() => handleTabClick(tab.id)}
-                        className={`w-full justify-start px-8 py-2 text-left text-sm transition-colors ${
-                          activeTab === tab.id
-                            ? 'bg-slate-700/50 text-white'
-                            : 'text-slate-400 hover:text-white hover:bg-slate-700/30'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-3">
-                          {(() => {
-                            const IconComponent = tab.icon;
-                            return <IconComponent className="h-4 w-4" />;
-                          })()}
-                          <span>{tab.mobileLabel}</span>
-                          {tab.badge && alertCount > 0 && (
-                            <Badge className="ml-auto bg-red-500 text-white text-xs">
-                              {alertCount}
-                            </Badge>
-                          )}
-                        </div>
-                      </Button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      {/* Quick Actions for Mobile */}
-      <div className="grid grid-cols-4 gap-2">
-        {tabConfig.slice(0, 4).map((tab) => (
-          <Button
-            key={tab.id}
-            variant="ghost"
-            size="sm"
-            onClick={() => handleTabClick(tab.id)}
-            className={`flex flex-col items-center space-y-1 p-2 h-auto ${
-              activeTab === tab.id
-                ? 'bg-slate-700 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-            }`}
-          >
-            {(() => {
-              const IconComponent = tab.icon;
-              return <IconComponent className="h-4 w-4" />;
-            })()}
-            <span className="text-xs">{tab.mobileLabel}</span>
-          </Button>
-        ))}
-      </div>
-    </div>
+    </nav>
   )
 }

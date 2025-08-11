@@ -44,6 +44,7 @@ import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
 import { useRouter } from 'next/navigation'
 import { authenticatedFetch } from '@/lib/api-client'
+import { SidebarNav } from "./responsive-tabs"
 
 export function Dashboard() {
   const [showTradeForm, setShowTradeForm] = useState(false)
@@ -241,100 +242,14 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
-      {/* Header */}
-      <header className="border-b border-border/50 bg-card/30 backdrop-blur-xl supports-[backdrop-filter]:bg-card/20 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <PulseEffect>
-                  <div className="p-2 bg-gradient-to-r from-primary to-accent rounded-xl shadow-lg">
-                    <AnimatedIcon animation="float">
-                      <BarChart3 className="h-6 w-6 text-primary-foreground" />
-                    </AnimatedIcon>
-                  </div>
-                </PulseEffect>
-                <div>
-                  <GradientText className="text-3xl font-bold">
-                    RiskRat.io
-                  </GradientText>
-                  <p className="text-xs text-muted-foreground">Futures & Forex Analytics</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <GlobalSearch onNavigate={handleNavigate} />
-              <div className="text-right hidden sm:block">
-                <div className="text-sm font-medium text-foreground">{user.full_name || user.fullName}</div>
-                <div className="text-xs text-muted-foreground">{user.email}</div>
-              </div>
-              <ModernButton
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowOnboarding(true)}
-                title="Help & Tour"
-              >
-                <AnimatedIcon animation="pulse" className="mr-2">
-                  <HelpCircle className="h-4 w-4" />
-                </AnimatedIcon>
-                Help & Tour
-              </ModernButton>
-              <ModernButton
-                variant="ghost"
-                size="sm"
-                onClick={() => setActiveTab("settings")}
-              >
-                <AnimatedIcon animation="float" className="mr-2">
-                  <Settings className="h-4 w-4" />
-                </AnimatedIcon>
-                Settings
-              </ModernButton>
-              <ModernButton
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  localStorage.removeItem('user')
-                  router.push('/')
-                }}
-              >
-                Sign Out
-              </ModernButton>
-              <ModernButton
-                variant="ghost"
-                size="sm"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                <AnimatedIcon animation="float" className="mr-2">
-                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                </AnimatedIcon>
-              </ModernButton>
-              <ModernButton 
-                variant="gradient"
-                onClick={() => setShowTradeForm(true)} 
-                className="shadow-lg hover:shadow-xl"
-              >
-                <AnimatedIcon animation="bounce" className="mr-2">
-                  <Plus className="h-4 w-4" />
-                </AnimatedIcon>
-                Add Trade
-              </ModernButton>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-6 relative">
-        <BreadcrumbNav currentTab={activeTab} onNavigate={handleNavigate} />
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <ResponsiveTabs 
-            activeTab={activeTab} 
-            onTabChange={setActiveTab} 
-            alertCount={alertCount}
-          />
-
-          <TabsContent value="dashboard" className="space-y-6">
+    <div className="flex min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      {/* Sidebar Navigation */}
+      <SidebarNav activeTab={activeTab} onTabChange={setActiveTab} alertCount={alertCount} />
+      {/* Main Content */}
+      <div className="flex-1 ml-16 lg:ml-56 transition-all duration-300">
+        <div className="container mx-auto px-4 py-6 relative">
+          <BreadcrumbNav currentTab={activeTab} onNavigate={setActiveTab} />
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             {/* Quick Actions */}
             <QuickActions 
               onAddTrade={() => setShowTradeForm(true)}
@@ -494,113 +409,46 @@ export function Dashboard() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </Tabs>
+        </div>
+        {/* Main Content */}
+        {showTradeForm && (
+          <TradeForm onClose={() => setShowTradeForm(false)} />
+        )}
 
-          <TabsContent value="trades" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-white">Trade History</h2>
-                <p className="text-slate-400 text-sm mt-1">Click on any trade to view detailed chart and analysis</p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-400" />
-                  <Input 
-                    placeholder="Search trades..." 
-                    className="pl-8 w-64 bg-slate-800/50 border-slate-700/50 text-white placeholder:text-slate-400" 
-                  />
-                </div>
-                <Button variant="outline" className="border-slate-700/50 text-slate-300 hover:text-white">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                </Button>
-              </div>
-            </div>
-            <TradeHistory />
-          </TabsContent>
+        {/* Onboarding Tour */}
+        <OnboardingTour 
+          isOpen={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+          onComplete={handleOnboardingComplete}
+        />
 
-          <TabsContent value="analytics" className="space-y-6">
-            <h2 className="text-2xl font-bold text-white">Analytics</h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-white">Monthly Performance</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <PerformanceChart />
-                </CardContent>
-              </Card>
-              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-white">Trade Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
-                      <span className="text-slate-300">Winning Trades</span>
-                      <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                        {Math.round(stats.totalTrades * stats.winRate / 100)}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
-                      <span className="text-slate-300">Losing Trades</span>
-                      <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
-                        {stats.totalTrades - Math.round(stats.totalTrades * stats.winRate / 100)}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+        {/* Toast Notifications */}
+        <ToastNotifications 
+          toasts={toast.toasts}
+          onDismiss={toast.dismissToast}
+        />
 
-          <TabsContent value="calendar" className="space-y-6">
-            <h2 className="text-2xl font-bold text-white">Trading Calendar</h2>
-            <CalendarView />
-          </TabsContent>
+        {/* Keyboard Shortcuts */}
+        <KeyboardShortcuts onAction={handleKeyboardAction} />
 
-          <TabsContent value="economic" className="space-y-6">
-            <EconomicCalendar />
-          </TabsContent>
-        </Tabs>
+        {/* Floating Action Button */}
+        <FloatingActionButton
+          onClick={() => setShowTradeForm(true)}
+          position="bottom-right"
+          className="bg-gradient-to-r from-primary to-accent shadow-2xl"
+        >
+          <AnimatedIcon animation="bounce">
+            <Plus className="h-6 w-6" />
+          </AnimatedIcon>
+        </FloatingActionButton>
+
+        {/* PWA Registration */}
+        <PWARegistration 
+          onInstall={() => toast.success('App Installed', 'RiskRat.io has been installed successfully!')}
+          onUpdate={() => toast.info('App Updated', 'RiskRat.io has been updated to the latest version.')}
+        />
       </div>
-
-      {showTradeForm && (
-        <TradeForm onClose={() => setShowTradeForm(false)} />
-      )}
-
-      {/* Onboarding Tour */}
-      <OnboardingTour 
-        isOpen={showOnboarding}
-        onClose={() => setShowOnboarding(false)}
-        onComplete={handleOnboardingComplete}
-      />
-
-      {/* Toast Notifications */}
-      <ToastNotifications 
-        toasts={toast.toasts}
-        onDismiss={toast.dismissToast}
-      />
-
-      {/* Keyboard Shortcuts */}
-      <KeyboardShortcuts onAction={handleKeyboardAction} />
-
-      {/* Floating Action Button */}
-      <FloatingActionButton
-        onClick={() => setShowTradeForm(true)}
-        position="bottom-right"
-        className="bg-gradient-to-r from-primary to-accent shadow-2xl"
-      >
-        <AnimatedIcon animation="bounce">
-          <Plus className="h-6 w-6" />
-        </AnimatedIcon>
-      </FloatingActionButton>
-
-      {/* PWA Registration */}
-      <PWARegistration 
-        onInstall={() => toast.success('App Installed', 'RiskRat.io has been installed successfully!')}
-        onUpdate={() => toast.info('App Updated', 'RiskRat.io has been updated to the latest version.')}
-      />
     </div>
   )
 }
