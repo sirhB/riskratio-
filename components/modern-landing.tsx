@@ -109,33 +109,33 @@ export function ModernLanding() {
       {/* Sticky Navbar */}
       <motion.header initial={{ y: -60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.7 }} className="sticky top-0 z-20 border-b border-gray-800 bg-black/80 backdrop-blur-xl shadow-lg">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <PulseEffect>
+            <div className="flex items-center space-x-3">
+              <PulseEffect>
               <div className="p-2 bg-gradient-to-r from-purple-700 to-cyan-600 rounded-xl shadow-lg">
-                <AnimatedIcon animation="float">
+                  <AnimatedIcon animation="float">
                   <BarChart3 className="h-6 w-6 text-white" />
-                </AnimatedIcon>
-              </div>
-            </PulseEffect>
+                  </AnimatedIcon>
+                </div>
+              </PulseEffect>
             <GradientText className="text-2xl font-extrabold tracking-tight">
-              RiskRat.io
-            </GradientText>
-          </div>
+                RiskRat.io
+              </GradientText>
+            </div>
           <nav className="flex items-center space-x-4">
             <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(featuresRef)} className="text-gray-200 hover:text-white">
-              Features
-            </ModernButton>
+                Features
+              </ModernButton>
             <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(pricingRef)} className="text-gray-200 hover:text-white">
-              Pricing
-            </ModernButton>
+                Pricing
+              </ModernButton>
             <ModernButton variant="ghost" size="sm" onClick={() => scrollToSection(aboutRef)} className="text-gray-200 hover:text-white">
-              About
-            </ModernButton>
+                About
+              </ModernButton>
             <ModernButton variant="gradient" size="sm" onClick={() => { setAuthMode('signup'); setShowAuthModal(true); }} className="shadow-glow animate-pulse">
-              Get Started
-            </ModernButton>
+                Get Started
+              </ModernButton>
           </nav>
-        </div>
+            </div>
       </motion.header>
       {/* Hero Section */}
       <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative z-10 py-28 px-4 flex flex-col items-center justify-center min-h-[70vh]">
@@ -148,7 +148,7 @@ export function ModernLanding() {
               Trusted by 10,000+ Professional Traders
             </ModernBadge>
             <h1 className="text-6xl md:text-7xl font-extrabold mb-6 animate-gradient-x bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent">
-              Master Your Trading
+                Master Your Trading
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               The ultimate trading journal and risk management platform for futures and forex traders. Track performance, manage risk, and make data-driven decisions.
@@ -168,7 +168,7 @@ export function ModernLanding() {
               </ModernButton>
             </div>
           </motion.div>
-        </div>
+          </div>
       </motion.section>
       {/* Features Section */}
       <motion.section ref={featuresRef} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative z-10 py-20 px-4">
@@ -186,16 +186,16 @@ export function ModernLanding() {
               <motion.div key={index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
                 <ModernCard variant="glass" className={`p-8 text-center transition-all duration-500 bg-black/70 border-gray-800 ${currentFeature === index ? 'scale-105 shadow-2xl' : 'scale-100'}`}>
                   <div className={`p-4 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 mx-auto w-16 h-16 flex items-center justify-center animate-pulse`}>
-                    <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 200}>
-                      {(() => {
-                        const IconComponent = feature.icon;
-                        return <IconComponent className="h-8 w-8 text-white" />;
-                      })()}
-                    </AnimatedIcon>
-                  </div>
+                  <AnimatedIcon animation={index % 2 === 0 ? "pulse" : "float"} delay={index * 200}>
+                    {(() => {
+                      const IconComponent = feature.icon;
+                      return <IconComponent className="h-8 w-8 text-white" />;
+                    })()}
+                  </AnimatedIcon>
+                </div>
                   <h3 className="text-xl font-bold mb-3 text-white">{feature.title}</h3>
                   <p className="text-gray-400">{feature.description}</p>
-                </ModernCard>
+              </ModernCard>
               </motion.div>
             ))}
           </div>

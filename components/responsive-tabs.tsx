@@ -8,7 +8,7 @@ import {
   Calendar, DollarSign, Globe, Bell, Target, Lightbulb, 
   Users, LineChart, Brain, Link, Smartphone, PieChart, Settings, ChevronRight, ChevronLeft
 } from "lucide-react"
-import { Tooltip } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 
 interface ResponsiveTabsProps {
   activeTab: string
@@ -149,41 +149,50 @@ export function SidebarNav({ activeTab, onTabChange, alertCount = 0 }: Responsiv
     if (isMobile) setCollapsed(false)
   }
   return (
-    <nav className={`fixed top-0 left-0 h-full z-30 bg-black/90 border-r border-gray-800 flex flex-col transition-all duration-300 ${collapsed && !isMobile ? 'w-16' : 'w-56'} ${isMobile ? 'w-0' : ''}`}
-      style={{ minHeight: '100vh' }}>
-      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-800">
-        <div className="flex items-center space-x-2">
-          <BarChart3 className="h-6 w-6 text-cyan-400" />
-          {!collapsed && <span className="text-lg font-bold text-white">RiskRat.io</span>}
+    <TooltipProvider>
+      <nav className={`fixed top-0 left-0 h-full z-30 bg-black/90 border-r border-gray-800 flex flex-col transition-all duration-300 ${collapsed && !isMobile ? 'w-16' : 'w-56'} ${isMobile ? 'w-0' : ''}`}
+        style={{ minHeight: '100vh' }}>
+        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-800">
+          <div className="flex items-center space-x-2">
+            <BarChart3 className="h-6 w-6 text-cyan-400" />
+            {!collapsed && <span className="text-lg font-bold text-white">RiskRat.io</span>}
+          </div>
+          <button
+            className="text-gray-400 hover:text-cyan-400 focus:outline-none"
+            onClick={() => setCollapsed((c) => !c)}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+          </button>
         </div>
-        <button
-          className="text-gray-400 hover:text-cyan-400 focus:outline-none"
-          onClick={() => setCollapsed((c) => !c)}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
-        </button>
-      </div>
-      <div className="flex-1 flex flex-col py-4 space-y-2 overflow-y-auto">
-        {tabConfig.map((tab) => (
-          <Tooltip key={tab.id} content={tab.label} placement="right" disabled={!collapsed}>
-            <button
-              className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group ${activeTab === tab.id ? 'bg-cyan-900/60 text-cyan-400' : 'text-gray-300 hover:bg-gray-800/60 hover:text-white'} ${collapsed ? 'justify-center' : ''}`}
-              onClick={() => handleTabClick(tab.id)}
-              aria-label={tab.label}
-            >
-              {(() => {
-                const IconComponent = tab.icon;
-                return <IconComponent className="h-5 w-5" />;
-              })()}
-              {!collapsed && <span className="ml-3 text-base">{tab.label}</span>}
-              {tab.badge && alertCount > 0 && (
-                <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-0.5">{alertCount}</span>
+        <div className="flex-1 flex flex-col py-4 space-y-2 overflow-y-auto">
+          {tabConfig.map((tab) => (
+            <Tooltip key={tab.id}>
+              <TooltipTrigger asChild>
+                <button
+                  className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group ${activeTab === tab.id ? 'bg-cyan-900/60 text-cyan-400' : 'text-gray-300 hover:bg-gray-800/60 hover:text-white'} ${collapsed ? 'justify-center' : ''}`}
+                  onClick={() => handleTabClick(tab.id)}
+                  aria-label={tab.label}
+                >
+                  {(() => {
+                    const IconComponent = tab.icon;
+                    return <IconComponent className="h-5 w-5" />;
+                  })()}
+                  {!collapsed && <span className="ml-3 text-base">{tab.label}</span>}
+                  {tab.badge && alertCount > 0 && (
+                    <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-0.5">{alertCount}</span>
+                  )}
+                </button>
+              </TooltipTrigger>
+              {collapsed && (
+                <TooltipContent side="right">
+                  {tab.label}
+                </TooltipContent>
               )}
-            </button>
-          </Tooltip>
-        ))}
-      </div>
-    </nav>
+            </Tooltip>
+          ))}
+        </div>
+      </nav>
+    </TooltipProvider>
   )
 }

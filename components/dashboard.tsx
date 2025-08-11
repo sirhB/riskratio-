@@ -247,9 +247,9 @@ export function Dashboard() {
       <SidebarNav activeTab={activeTab} onTabChange={setActiveTab} alertCount={alertCount} />
       {/* Main Content */}
       <div className="flex-1 ml-16 lg:ml-56 transition-all duration-300">
-        <div className="container mx-auto px-4 py-6 relative">
+      <div className="container mx-auto px-4 py-6 relative">
           <BreadcrumbNav currentTab={activeTab} onNavigate={setActiveTab} />
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             {/* Quick Actions */}
             <QuickActions 
               onAddTrade={() => setShowTradeForm(true)}
@@ -409,45 +409,45 @@ export function Dashboard() {
                 </div>
               </CardContent>
             </Card>
-          </Tabs>
-        </div>
+        </Tabs>
+      </div>
         {/* Main Content */}
-        {showTradeForm && (
-          <TradeForm onClose={() => setShowTradeForm(false)} />
-        )}
+      {showTradeForm && (
+        <TradeForm onClose={() => setShowTradeForm(false)} />
+      )}
 
-        {/* Onboarding Tour */}
-        <OnboardingTour 
-          isOpen={showOnboarding}
-          onClose={() => setShowOnboarding(false)}
-          onComplete={handleOnboardingComplete}
-        />
+      {/* Onboarding Tour */}
+      <OnboardingTour 
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onComplete={handleOnboardingComplete}
+      />
 
-        {/* Toast Notifications */}
-        <ToastNotifications 
-          toasts={toast.toasts}
-          onDismiss={toast.dismissToast}
-        />
+      {/* Toast Notifications */}
+      <ToastNotifications 
+        toasts={toast.toasts}
+        onDismiss={toast.dismissToast}
+      />
 
-        {/* Keyboard Shortcuts */}
-        <KeyboardShortcuts onAction={handleKeyboardAction} />
+      {/* Keyboard Shortcuts */}
+      <KeyboardShortcuts onAction={handleKeyboardAction} />
 
-        {/* Floating Action Button */}
-        <FloatingActionButton
-          onClick={() => setShowTradeForm(true)}
-          position="bottom-right"
-          className="bg-gradient-to-r from-primary to-accent shadow-2xl"
-        >
-          <AnimatedIcon animation="bounce">
-            <Plus className="h-6 w-6" />
-          </AnimatedIcon>
-        </FloatingActionButton>
+      {/* Floating Action Button */}
+      <FloatingActionButton
+        onClick={() => setShowTradeForm(true)}
+        position="bottom-right"
+        className="bg-gradient-to-r from-primary to-accent shadow-2xl"
+      >
+        <AnimatedIcon animation="bounce">
+          <Plus className="h-6 w-6" />
+        </AnimatedIcon>
+      </FloatingActionButton>
 
-        {/* PWA Registration */}
-        <PWARegistration 
-          onInstall={() => toast.success('App Installed', 'RiskRat.io has been installed successfully!')}
-          onUpdate={() => toast.info('App Updated', 'RiskRat.io has been updated to the latest version.')}
-        />
+      {/* PWA Registration */}
+      <PWARegistration 
+        onInstall={() => toast.success('App Installed', 'RiskRat.io has been installed successfully!')}
+        onUpdate={() => toast.info('App Updated', 'RiskRat.io has been updated to the latest version.')}
+      />
       </div>
     </div>
   )
