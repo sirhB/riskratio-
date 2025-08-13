@@ -53,6 +53,9 @@ interface DashboardProps {
 export function Dashboard({ initialTab }: DashboardProps) {
   const [showTradeForm, setShowTradeForm] = useState(false)
   const [activeTab, setActiveTab] = useState(initialTab || "dashboard")
+  const allowedTabs = new Set([
+    "dashboard","trades","calendar","pnl","economic","alerts","risk","suggestions","social","charting","ai","broker","mobile","analytics","settings"
+  ])
   const [stats, setStats] = useState({
     totalPnL: 0,
     winRate: 0,
@@ -76,6 +79,29 @@ export function Dashboard({ initialTab }: DashboardProps) {
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  // Initialize from ?tab= query param if present
+  useEffect(() => {
+    if (!isClient) return
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const tabFromUrl = params.get('tab')
+      if (tabFromUrl && allowedTabs.has(tabFromUrl)) {
+        setActiveTab(tabFromUrl)
+      }
+    } catch {}
+  }, [isClient])
+
+  // Keep URL synced to /dashboard?tab=... without leaving the page
+  useEffect(() => {
+    if (!isClient) return
+    try {
+      const desired = `/dashboard?tab=${activeTab}`
+      if (window.location.pathname !== '/dashboard' || window.location.search !== `?tab=${activeTab}`) {
+        window.history.replaceState(null, '', desired)
+      }
+    } catch {}
+  }, [activeTab, isClient])
 
   // Note: keeping navigation state internal to preserve the dashboard shell
 
