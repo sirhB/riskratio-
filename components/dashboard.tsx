@@ -428,7 +428,7 @@ export function Dashboard({ initialTab }: DashboardProps) {
       <div className="flex-1 ml-56 transition-all duration-300">
       <div className="container mx-auto px-4 py-6 relative">
           <BreadcrumbNav currentTab={activeTab} onNavigate={setActiveTab} />
-          <div className="space-y-6">
+          <div key={activeTab} className="space-y-6">
             {renderContent()}
           </div>
       </div>
