@@ -42,14 +42,17 @@ import {
 } from "./modern-design-system"
 import { Input } from "@/components/ui/input"
 import { useTheme } from "next-themes"
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { authenticatedFetch } from '@/lib/api-client'
 import { SidebarNav } from "./responsive-tabs"
 
-export function Dashboard() {
+interface DashboardProps {
+  initialTab?: string
+}
+
+export function Dashboard({ initialTab }: DashboardProps) {
   const [showTradeForm, setShowTradeForm] = useState(false)
-  const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState("dashboard")
+  const [activeTab, setActiveTab] = useState(initialTab || "dashboard")
   const [stats, setStats] = useState({
     totalPnL: 0,
     winRate: 0,
@@ -74,24 +77,7 @@ export function Dashboard() {
     setIsClient(true)
   }, [])
 
-  // Initialize active tab from URL query (?tab=...)
-  useEffect(() => {
-    if (!isClient) return
-    const tabFromUrl = searchParams.get('tab')
-    if (tabFromUrl) {
-      setActiveTab(tabFromUrl)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isClient])
-
-  // Keep URL in sync with the active tab without leaving /dashboard
-  useEffect(() => {
-    if (!isClient) return
-    const current = searchParams.get('tab')
-    if (current !== activeTab) {
-      router.replace(`/dashboard?tab=${activeTab}`)
-    }
-  }, [activeTab, isClient, router, searchParams])
+  // Note: keeping navigation state internal to preserve the dashboard shell
 
   // Handle user authentication
   useEffect(() => {
@@ -413,12 +399,12 @@ export function Dashboard() {
       {/* Sidebar Navigation */}
       <SidebarNav activeTab={activeTab} onTabChange={setActiveTab} alertCount={alertCount} />
       {/* Main Content */}
-      <div className="flex-1 ml-16 lg:ml-56 transition-all duration-300">
+      <div className="flex-1 ml-56 transition-all duration-300">
       <div className="container mx-auto px-4 py-6 relative">
           <BreadcrumbNav currentTab={activeTab} onNavigate={setActiveTab} />
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <div className="space-y-6">
             {renderContent()}
-        </Tabs>
+          </div>
       </div>
         {/* Main Content */}
       {showTradeForm && (

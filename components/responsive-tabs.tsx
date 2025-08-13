@@ -140,7 +140,7 @@ export function SidebarNav({ activeTab, onTabChange, alertCount = 0 }: Responsiv
   }
   return (
     <TooltipProvider>
-      <nav className={`fixed top-0 left-0 h-full z-30 bg-black/90 border-r border-gray-800 flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-56'}`}
+      <nav className={`fixed top-0 left-0 h-full z-[1000] bg-black/90 border-r border-gray-800 flex flex-col transition-all duration-300 ${collapsed ? 'w-16' : 'w-56'}`}
         style={{ minHeight: '100vh' }}>
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-800">
           <div className="flex items-center space-x-2">
